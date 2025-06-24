@@ -9,4 +9,4 @@ router.post('/', addToCart)
       .patch('/:id', updateCart)
 
 
-module.router = router;
+module.exports = router;

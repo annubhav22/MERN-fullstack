@@ -10,4 +10,4 @@ router.post('/', createOrder)
       .get('/',fetchAllOrders)
 
 
-module.router = router;
+module.exports = router;

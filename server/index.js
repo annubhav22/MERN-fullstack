@@ -11,27 +11,19 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const stripe = require('stripe')(process.env.STRIPE_SERVER_KEY);
-const BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
-fetch(`${BASE_URL}/products`);
+
 // --- Models ---
 const { User } = require('./model/User');
 const { Order } = require('./model/Order');
 
 // --- Routes ---
 const productsRouter = require('./routes/Products');
-console.log("📦 productsRouter =", productsRouter?.router || productsRouter);
 const categoryRouter = require('./routes/Categories');
-console.log("📦 categoryRouter =", categoryRouter);
 const brandsRouter = require('./routes/Brands');
-console.log("📦 brandsRouter =", brandsRouter?.router || brandsRouter);
 const usersRouter = require('./routes/Users');
-console.log("📦 usersRouter =", usersRouter?.router || usersRouter);
 const authRouter = require('./routes/Auth');
-console.log("📦 authRouter =", authRouter?.router || authRouter);
 const cartRouter = require('./routes/Cart');
-console.log("📦 cartRouter =", cartRouter?.router || cartRouter);
 const ordersRouter = require('./routes/Order');
-console.log("📦 ordersRouter =", ordersRouter?.router || ordersRouter);
 
 // --- Services ---
 const { isAuth, sanitizeUser, cookieExtractor } = require('./services/common');
@@ -55,7 +47,7 @@ app.use(
 app.use(passport.authenticate('session'));
 app.use(
   cors({
-    origin: ['https://merno-n4eq.onrender.com'],
+    origin: ['https://merno-n4eq.onrender.com'], // ✅ change to your frontend URL
     credentials: true,
     exposedHeaders: ['X-Total-Count'],
   })
@@ -101,6 +93,7 @@ passport.serializeUser((user, cb) => {
     cb(null, { id: user.id, role: user.role });
   });
 });
+
 passport.deserializeUser((user, cb) => {
   process.nextTick(() => {
     cb(null, user);
@@ -109,8 +102,8 @@ passport.deserializeUser((user, cb) => {
 
 // --- API Routes ---
 app.use('/products', productsRouter);
-app.use('/categories', categoryRouter); // ✅ this must be module.exports = router
-app.use('/brands', brandsRouter); // consistent lowercase
+app.use('/categories', categoryRouter);
+app.use('/brands', brandsRouter);
 app.use('/users', isAuth(), usersRouter);
 app.use('/auth', authRouter);
 app.use('/cart', isAuth(), cartRouter);
@@ -139,7 +132,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
   res.send();
 });
 
-// --- Stripe Payment Intent Endpoint ---
+// --- Create PaymentIntent ---
 app.post('/create-payment-intent', async (req, res) => {
   const { totalAmount, orderId } = req.body;
 
@@ -158,13 +151,13 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
 });
 
-// --- Start MongoDB and Server ---
+// --- Connect to MongoDB and Start Server ---
 async function main() {
   try {
     await mongoose.connect(process.env.MONGODB_URL);
     console.log('✅ MongoDB Connected');
 
-   const PORT = process.env.PORT;
+    const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });

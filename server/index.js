@@ -107,13 +107,13 @@ passport.deserializeUser((user, cb) => {
 });
 
 // --- API Routes ---
-app.use('/products', productsRouter.router);
+app.use('/products', productsRouter);
 app.use('/categories', categoryRouter); // ✅ this must be module.exports = router
 app.use('/brands', brandsRouter); // consistent lowercase
-app.use('/users', isAuth(), usersRouter.router);
+app.use('/users', isAuth(), usersRouter);
 app.use('/auth', authRouter);
-app.use('/cart', isAuth(), cartRouter.router);
-app.use('/orders', isAuth(), ordersRouter.router);
+app.use('/cart', isAuth(), cartRouter);
+app.use('/orders', isAuth(), ordersRouter);
 
 // --- Stripe Webhook ---
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {

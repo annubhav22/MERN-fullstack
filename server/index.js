@@ -11,7 +11,8 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const stripe = require('stripe')(process.env.STRIPE_SERVER_KEY);
-
+const BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
+fetch(`${BASE_URL}/products`);
 // --- Models ---
 const { User } = require('./model/User');
 const { Order } = require('./model/Order');

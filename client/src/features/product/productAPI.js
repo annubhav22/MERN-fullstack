@@ -1,7 +1,8 @@
+const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
 
 export function fetchProductById(id) {
   return new Promise(async (resolve) => {
-    const response = await fetch('/products/' + id);
+    const response = await fetch(`${BASE_URL}/products/${id}`);
     const data = await response.json();
     resolve({ data });
   });
@@ -9,7 +10,7 @@ export function fetchProductById(id) {
 
 export function createProduct(product) {
   return new Promise(async (resolve) => {
-    const response = await fetch('/products/', {
+    const response = await fetch(`${BASE_URL}/products/`, {
       method: 'POST',
       body: JSON.stringify(product),
       headers: { 'content-type': 'application/json' },
@@ -21,29 +22,22 @@ export function createProduct(product) {
 
 export function updateProduct(update) {
   return new Promise(async (resolve) => {
-    const response = await fetch(
-      '/products/' + update.id,
-      {
-        method: 'PATCH',
-        body: JSON.stringify(update),
-        headers: { 'content-type': 'application/json' },
-      }
-    );
+    const response = await fetch(`${BASE_URL}/products/${update.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(update),
+      headers: { 'content-type': 'application/json' },
+    });
     const data = await response.json();
     resolve({ data });
   });
 }
 
 export function fetchProductsByFilters(filter, sort, pagination, admin) {
-  // filter = {"category":["smartphone","laptops"]}
-  // sort = {_sort:"price",_order="desc"}
-  // pagination = {_page:1,_limit=10}
-
   let queryString = '';
   for (let key in filter) {
-    const categoryValues = filter[key];
-    if (categoryValues.length) {
-      queryString += `${key}=${categoryValues}&`;
+    const values = filter[key];
+    if (values.length) {
+      queryString += `${key}=${values.join(',')}&`;
     }
   }
   for (let key in sort) {
@@ -52,14 +46,12 @@ export function fetchProductsByFilters(filter, sort, pagination, admin) {
   for (let key in pagination) {
     queryString += `${key}=${pagination[key]}&`;
   }
-  if(admin){
+  if (admin) {
     queryString += `admin=true`;
   }
 
   return new Promise(async (resolve) => {
-    const response = await fetch(
-      '/products?' + queryString
-    );
+    const response = await fetch(`${BASE_URL}/products?${queryString}`);
     const data = await response.json();
     const totalItems = await response.headers.get('X-Total-Count');
     resolve({ data: { products: data, totalItems: +totalItems } });
@@ -68,7 +60,7 @@ export function fetchProductsByFilters(filter, sort, pagination, admin) {
 
 export function fetchCategories() {
   return new Promise(async (resolve) => {
-    const response = await fetch('/categories');
+    const response = await fetch(`${BASE_URL}/categories`);
     const data = await response.json();
     resolve({ data });
   });
@@ -76,7 +68,7 @@ export function fetchCategories() {
 
 export function fetchBrands() {
   return new Promise(async (resolve) => {
-    const response = await fetch('/brands');
+    const response = await fetch(`${BASE_URL}/brands`);
     const data = await response.json();
     resolve({ data });
   });

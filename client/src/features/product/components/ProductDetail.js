@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { useAlert } from 'react-alert';
+import { toast } from 'react-toastify';
 import { Grid } from 'react-loader-spinner';
 import { StarIcon } from '@heroicons/react/20/solid';
 import { RadioGroup } from '@headlessui/react';
@@ -22,7 +22,7 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState();
   const dispatch = useDispatch();
   const params = useParams();
-  const alert = useAlert();
+
 
   const product = useSelector(selectProductById);
   const status = useSelector(selectProductListStatus);
@@ -38,9 +38,9 @@ export default function ProductDetail() {
         ...(selectedColor && { color: selectedColor }),
         ...(selectedSize && { size: selectedSize }),
       };
-      dispatch(addToCartAsync({ item: newItem, alert }));
+      dispatch(addToCartAsync({ item: newItem }));
     } else {
-      alert.error('Item already added');
+      toast.error('Item already added');
     }
   };
 

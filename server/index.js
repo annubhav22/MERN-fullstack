@@ -163,7 +163,7 @@ async function main() {
     await mongoose.connect(process.env.MONGODB_URL);
     console.log('✅ MongoDB Connected');
 
-    const PORT = process.env.PORT || 8080;
+   const PORT = process.env.PORT;
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });

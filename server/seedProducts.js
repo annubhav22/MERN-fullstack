@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
-const { Product } = require('./model/Product');
+const Product = require('./model/Product');
 const fs = require('fs');
 const path = require('path');
+const data = require('./data.json');
 require('dotenv').config();
 
 const MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost:27017/ecommerce';

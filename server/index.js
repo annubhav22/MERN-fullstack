@@ -55,7 +55,7 @@ app.use(
 app.use(passport.authenticate('session'));
 app.use(
   cors({
-    origin: ['http://localhost:3000'],
+    origin: ['https://merno-n4eq.onrender.com'],
     credentials: true,
     exposedHeaders: ['X-Total-Count'],
   })

@@ -1,15 +1,23 @@
 
 export function createUser(userData) {
-  return new Promise(async (resolve) => {
-    const response = await fetch('/auth/signup', {
-      method: 'POST',
-      body: JSON.stringify(userData),
-      headers: { 'content-type': 'application/json' },
-    });
-    const data = await response.json();
-    resolve({ data });
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await fetch('/auth/signup', {
+        method: 'POST',
+        body: JSON.stringify(userData),
+        headers: { 'content-type': 'application/json' },
+      });
+
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : {}; // ✅ safe even if empty
+
+      resolve({ data });
+    } catch (error) {
+      reject(error);
+    }
   });
 }
+
 
 export function loginUser(loginInfo) {
   return new Promise(async (resolve, reject) => {
